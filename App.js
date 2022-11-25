@@ -1,20 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react'
+import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Alert,  FlatList, Image, Button, Dimensions } from 'react-native'
+import axios from 'axios'
+import UserCards from './src/components/Card_copy';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+class axioslist extends Component {
+
+  constructor(props) {
+    super(props);
+     this.state = {
+      posts:[],
+    }
+  }
+
+//   componentDidMount(){
+//     axios.get('https://rickandmortyapi.com/api/character')
+//     .then(res => {
+//       console.log(res.data.results)
+//       this.setState({
+//         posts: res.data.results,
+//         // n: res.data.results[0].name,
+//         // s: res.data.results[0].status,
+//         // species: res.data.results[0].species,
+//         // gender: res.data.results[0].gender
+//       })
+//     })
+//  }
+
+  render() {
+    const { posts } = this.state;
+    const postList = posts.length ? (
+      posts.map(post =>
+        {
+          return(
+
+          <Text  key={post.name}>
+            {post.name},
+           </Text>
+      )
+        })
+    ) : (<Text>No data yet.</Text>)
+
+
+    return (
+
+      <View>
+        <UserCards posts={posts}/>
+        {<Text>{postList} </Text>}
+
+      </View>
+      );
+    }}
+
+      export default axioslist
