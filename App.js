@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
+import 'react-native-gesture-handler';
 import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Alert,  FlatList, Image, Button, Dimensions } from 'react-native'
-import axios from 'axios'
 import UserCards from './src/components/Card_copy';
+import Home from './src/components/Home';
+import VIewCharacter from './src/components/VIewCharacter';
+import {NavigationContainer} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider } from 'react-redux';
+// import { PersistGate } from 'redux-persist/lib/integration/react'
+import store from './src/services/store';
+import { NativeBaseProvider } from "native-base";
 
+const Stack = createNativeStackNavigator();
 
-
-class axioslist extends Component {
+class App extends Component {
 
   constructor(props) {
     super(props);
@@ -13,44 +21,69 @@ class axioslist extends Component {
       posts:[],
     }
   }
-
-//   componentDidMount(){
-//     axios.get('https://rickandmortyapi.com/api/character')
-//     .then(res => {
-//       console.log(res.data.results)
-//       this.setState({
-//         posts: res.data.results,
-//         // n: res.data.results[0].name,
-//         // s: res.data.results[0].status,
-//         // species: res.data.results[0].species,
-//         // gender: res.data.results[0].gender
-//       })
-//     })
-//  }
-
-  render() {
-    const { posts } = this.state;
-    const postList = posts.length ? (
-      posts.map(post =>
-        {
-          return(
-
-          <Text  key={post.name}>
-            {post.name},
-           </Text>
-      )
-        })
-    ) : (<Text>No data yet.</Text>)
-
-
+  getContent() {
     return (
+      <NativeBaseProvider>
+      <NavigationContainer >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} options={{
+        headerStyle: {
+          backgroundColor: 'black',
+        },
+        headerTitle: () => (
+          <View style={{flexDirection: 'row'}}>
+          <Image
+            source={require('./src/components/logoRM.png')}
+            style={{ width: 30, height: 30, marginRight: 15 }}
+          />
+          <Text style={{color: 'white', alignSelf: 'center', fontWeight: 'bold', }}>HOME</Text>
+          </View>
+        ),
+      }}/>
+        <Stack.Screen name="Basic" component={UserCards} options={{
+        headerStyle: {
+          backgroundColor: 'black',
+        },
+        headerTitle: () => (
+          <View style={{flexDirection: 'row'}}>
+          <Image
+            source={require('./src/components/logoRM.png')}
+            style={{ width: 30, height: 30, marginRight: 15 }}
+          />
+          <Text style={{color: 'white', alignSelf: 'center', fontWeight: 'bold', }}>CHARACTERES</Text>
+          </View>
+        ),
+      }}/>
+      <Stack.Screen name="CharacterDetails" component={VIewCharacter} options={{
+        headerStyle: {
+          backgroundColor: 'black',
+        },
+        headerTitle: () => (
+          <View style={{flexDirection: 'row'}}>
+          <Image
+            source={require('./src/components/logoRM.png')}
+            style={{ width: 30, height: 30, marginRight: 15 }}
+          />
+          <Text style={{color: 'white', alignSelf: 'center', fontWeight: 'bold', }}>Character details</Text>
+          </View>
+        ),
+      }}/>
+      </Stack.Navigator>
 
-      <View>
-        <UserCards posts={posts}/>
-        {<Text>{postList} </Text>}
+      </NavigationContainer>
+      </NativeBaseProvider>
+    );
+  }
+  render() {
+return (
+  // <PersistGate persistor={persistor}>
+          <Provider store={store}>{this.getContent()}</Provider>
+        // </PersistGate>
 
-      </View>
-      );
+);
     }}
 
-      export default axioslist
+
+
+
+export default App
