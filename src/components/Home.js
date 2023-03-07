@@ -7,21 +7,15 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { todosReducer } from './todosReducer';
 import { charactersReducer } from './charactersReducer';
+import {connect} from "react-redux";
 import * as R from "ramda";
-import { connect } from "react-redux"
-import { fetchCharacters, fetchCharactersEpic } from '../services/fetchCharactersReducer';
-import store,{ persistor } from "../services/store";
-
-// const store = createStore(todosReducer, applyMiddleware(thunk));
-// const store2 = createStore(charactersReducer, applyMiddleware(thunk));
-// const store3 = createStore(fetchCharacters, applyMiddleware(thunk));
+import { fetchCharacters } from '../services/character';
 
 @connect((store)=>{
   return {
-  characters: R.pathOr([], ["services","characters","characters"])(store)
+    characters: R.pathOr([], ["services","characters","characters"])(store)
   };
 })
-
 export default class Home extends Component {
   constructor(props){
     super(props);
@@ -31,12 +25,12 @@ export default class Home extends Component {
   }
 
 componentDidMount(){
-  const { dispatch } = store;
-  dispatch(fetchCharacters(this.state.page))
-  // console.log(this.state)
+  const { dispatch } = this.props;
+  dispatch(fetchCharacters(this.state.page));
 }
 
   render() {
+    console.debug('characters: ',this.props.characters[0]);
     return (
 
             <View style={styles.container}>
@@ -44,16 +38,16 @@ componentDidMount(){
               source={require('./portada.png')}
               style={{ width: 350, height: 350, marginRight: 15 }}
             />
-            <TouchableOpacity
+            {/* <TouchableOpacity
           style={styles.appButtonContainer}
           onPress={() =>
             this.props.navigation.navigate('Basic')
           }>
           <Text style={styles.appButtonText}>GO TO CHARACTERES VIEW PAGE </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <Text>longitud: {this.props.characters.lenght}</Text>
-        {console.log(this.props.characters)}
+        <Text>first date: {this.props.characters[0].created}{'<-'}</Text>
+        <Text>longitud: {this.props.characters.length}</Text>
 
         {/* <Provider store={store2}>
       <CharactersList />
