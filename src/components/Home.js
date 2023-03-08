@@ -11,6 +11,7 @@ import * as R from "ramda";
 import { connect } from "react-redux"
 import { fetchCharacters, fetchCharactersEpic } from '../services/fetchCharactersReducer';
 import store,{ persistor } from "../services/store";
+import { PersistGate } from 'redux-persist/integration/react'
 
 // const store = createStore(todosReducer, applyMiddleware(thunk));
 // const store2 = createStore(charactersReducer, applyMiddleware(thunk));
@@ -33,10 +34,14 @@ export default class Home extends Component {
 componentDidMount(){
   const { dispatch } = store;
   dispatch(fetchCharacters(this.state.page))
+// this.props.dispatch(fetchCharacters(this.state.page))
   // console.log(this.state)
 }
 
   render() {
+
+    var s = store.getState();
+
     return (
 
             <View style={styles.container}>
@@ -53,8 +58,13 @@ componentDidMount(){
         </TouchableOpacity>
 
         <Text>longitud: {this.props.characters.lenght}</Text>
-        {console.log(this.props.characters)}
-
+        {/* {console.log(this.props.characters)} */}
+        {console.log("fromstore:", s.services.characters)}
+        {/* <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+        {console.log("here", store.getState().services)}
+        </PersistGate>
+      </Provider> */}
         {/* <Provider store={store2}>
       <CharactersList />
     </Provider> */}

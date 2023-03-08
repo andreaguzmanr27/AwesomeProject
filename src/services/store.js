@@ -2,13 +2,14 @@ import 'rxjs';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistCombineReducers, persistReducer  } from 'redux-persist';
 import storage from 'redux-persist/es/storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import logger from 'redux-logger'
 import { createEpicMiddleware } from "redux-observable";
 import { reducer as servicesReducer, epic as servicesEpic } from './reducer-epic';
 
 const config = {
   key: 'root',
-  storage:storage,
+  storage: AsyncStorage,
 };
 
 const appReducer = persistCombineReducers(config, {
