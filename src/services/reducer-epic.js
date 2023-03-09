@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { characterReducer, fetchCharactersEpic  } from "./fetchCharactersReducer";
+import { characterReducer, fetchCharactersEpic  } from "./character";
 import { combineEpics } from "redux-observable";
 
 export const reducer = combineReducers({

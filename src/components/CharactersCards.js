@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Alert,  FlatList, Image, Button, Dimensions, ScrollView, Touchable} from 'react-native'
 import MyComponent from './ViewEpisode';
 
-class UserCards extends Component {
+class CharactersCards extends Component {
 
   constructor(props) {
     super(props)
@@ -28,7 +28,6 @@ class UserCards extends Component {
         selected : index
       });
     }
-    // console.log(this.state.selected)
   };
 
   uppercase = word => {
@@ -70,21 +69,20 @@ class UserCards extends Component {
     this.setState({message: childData})
 };
 
-
   render() {
     return (
 
       <ScrollView style={styles.scrollView}>
         <View>
-{this.state.data.map((item, index) => (
-        <View>
+          {this.state.data.map((item, index) => (
+                  <View>
 
-        {(index === this.state.selected)?<MyComponent navigation = {this.props.navigation} s={item.id} e={item.episode}
-        image={this.state.data.map(character => character.url == this.state.message[0] ? {uri: character.image} : {uri: item.image})}/>
-        :null}
-                  {/* {console.log(this.state.message)} */}
-        </View>
-))}
+                  {(index === this.state.selected)?<MyComponent navigation = {this.props.navigation} s={item.id} e={item.episode}
+                  image={this.state.data.map(character => character.url == this.state.message[0] ? {uri: character.image} : {uri: item.image})}/>
+                  :null}
+                            {/* {console.log(this.state.message)} */}
+                  </View>
+          ))}
 
           {this.state.data.map((item, index) => (
           <TouchableOpacity>
@@ -92,7 +90,6 @@ class UserCards extends Component {
               style={(index === this.state.selected)?styles.selected:styles.card}
               >
             <View key={index}>
-
               <View>
                 <View>
                   <View style={styles.row}>
@@ -152,7 +149,7 @@ class UserCards extends Component {
             this.loadMore();
           }}
           style={styles.buttonMoreCharacteres}
-        ><Text style={styles.textButtonMoreCharacteres}>Load more characters</Text>
+          ><Text style={styles.textButtonMoreCharacteres}>Load more characters</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -274,4 +271,4 @@ const styles=StyleSheet.create({
   }
 })
 
-export default UserCards;
+export default CharactersCards;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import UserCards from './Card_copy';
 
 class MyComponent extends Component {
 

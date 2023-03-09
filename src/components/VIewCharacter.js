@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './store';
-import ComponentTest from './componenttest';
-
-import TodosList from './todosList';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { todosReducer } from './todosReducer';
-
-
-const store2 = createStore(todosReducer, applyMiddleware(thunk));
 
 class VIewCharacter extends Component {
   render() {
