@@ -18,11 +18,9 @@ export const characterReducer = function (state = {}, action = {}) {
 
 		  };
     case FETCH_CHARACTERS_SUCCESS:
-      // console.debug("action.payload: ",action.payload.length);
       return {
 				...state,
-				characters: action.payload,  // validar
-
+				characters: action.payload,
 		  };
     case FETCH_CHARACTERS_FAILURE:
       return { ...state,
@@ -50,9 +48,6 @@ export const fetchCharactersEpic = (action$) =>
   mergeMap((action) =>
       axios.get(endpoint.character+'?page='+action.page)
       .then( (response) => {
-        // handle success
-        // console.log("page:", action.page);
-        consoler.log("results:", response.data.results?.length);
         return successFetchCharacters(response?.data?.results);
       })
       .catch((exception) => {

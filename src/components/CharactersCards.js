@@ -1,19 +1,23 @@
 import React, { Component } from "react";
-import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, Alert,  FlatList, Image, Button, Dimensions, ScrollView, Touchable} from 'react-native'
-import MyComponent from './ViewEpisode';
+import { StyleSheet, TouchableOpacity, Text, View, Image, ScrollView} from 'react-native'
+import EpisodeComponent from './ViewEpisode';
+import {connect} from "react-redux";
+import * as R from "ramda";
+import { fetchCharacters } from '../services/character';
 
-class CharactersCards extends Component {
+@connect((store)=>{
+  return {
+    characters: R.pathOr([], ["services","characters","characters"])(store)
+  };
+})
 
+export default class CharactersCards extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      posts:[],
       data: [],
-      per: 9,
       page: 1,
-      total_pages: null,
       selected: null,
-      message: []
     }
   };
 
@@ -30,126 +34,86 @@ class CharactersCards extends Component {
     }
   };
 
-  uppercase = word => {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  };
-
-  loadData = () => {
-    const { page, data } = this.state;
-    const endpoint = `https://rickandmortyapi.com/api/character?page=${page}`;
-    fetch(endpoint)
-      .then(response => response.json())
-      .then(json => {
-        this.setState({
-          data: [...data, ...json.results],
-          scrolling: false,
-          total_pages: json.info.results
-        });
-      });
-  };
-1
   loadMore = () => {
     this.setState(
       prevState => ({
         page: prevState.page + 1,
-        scrolling: true
       }),
-      this.loadData
     );
+    const { dispatch } = this.props;
+    dispatch(fetchCharacters(this.state.page));
   };
 
   componentDidMount() {
-    this.loadData();
+  const { dispatch } = this.props;
+  dispatch(fetchCharacters(this.state.page));
   };
-
-  show = (item) => {
-    item.name;
-  };
-  callbackFunction = (childData) => {
-    this.setState({message: childData})
-};
 
   render() {
     return (
-
       <ScrollView style={styles.scrollView}>
         <View>
-          {this.state.data.map((item, index) => (
-                  <View>
-
-                  {(index === this.state.selected)?<MyComponent navigation = {this.props.navigation} s={item.id} e={item.episode}
-                  image={this.state.data.map(character => character.url == this.state.message[0] ? {uri: character.image} : {uri: item.image})}/>
-                  :null}
-                            {/* {console.log(this.state.message)} */}
-                  </View>
+          {this.props.characters.map((item, index) => (
+            <View>
+              {(index === this.state.selected)?
+                <EpisodeComponent navigation = {this.props.navigation} e={item.episode}/>
+              :null}
+            </View>
           ))}
-
-          {this.state.data.map((item, index) => (
-          <TouchableOpacity>
-            <View
-              style={(index === this.state.selected)?styles.selected:styles.card}
-              >
-            <View key={index}>
-              <View>
-                <View>
+          {this.props.characters.map((item, index) => (
+            <TouchableOpacity>
+              <View style={(index === this.state.selected)?styles.selected:styles.card}>
+                <View key={index}>
                   <View style={styles.row}>
-                    <Image
-                      style={{width: 50, height: 135, flex: 0.4, borderRadius: 10,}}
-                      source={{uri: item.image}}
-                    />
+                    <Image style={{width: 50, height: 135, flex: 0.4, borderRadius: 10,}} source={{uri: item.image}}/>
                     <View style={{flex: 0.2, padding: 5,}}>
                       <Text style={(index === this.state.selected)?styles.textsmallselected:styles.textsmall}>
-                        {this.uppercase(item.status)}
+                        {item.status}
                       </Text>
                       <Text numberOfLines={1} style={(index === this.state.selected)?styles.texttitleselected:styles.texttitle}>
-                        {this.uppercase(item.species)}
+                        {item.species}
                       </Text>
                       <Text style={(index === this.state.selected)?styles.textsmallselected:styles.textsmall}>Specie</Text>
                       <Text numberOfLines={2} style={(index === this.state.selected)?styles.texttitleselected:styles.texttitle}>
-                        {this.uppercase(item.origin.name)}
+                        {item.origin.name}
                       </Text>
                       <Text style={(index === this.state.selected)?styles.textsmallselected:styles.textsmall}>Origin</Text>
                       <Text numberOfLines={2} style={(index === this.state.selected)?styles.texttitleselected:styles.texttitle}>
-                        {this.uppercase(item.location.name)}
+                        {item.location.name}
                       </Text>
                       <Text style={(index === this.state.selected)?styles.textsmallselected:styles.textsmall}>Location</Text>
                     </View>
                     <View style={{ flex: 0.4, flexDirection: 'column' }}>
                       <Text numberOfLines={2} style={(index === this.state.selected)?styles.textnameselected:styles.textname}  >
-                        {this.uppercase(item.name)}
+                        {item.name}
                       </Text>
                       <Image source={item.gender == 'Male' ? (index === this.state.selected)?require('./malewhite.png'):require('./male.png'): (index === this.state.selected)?require('./femalewhite.png'):require('./female.png')} key={item} style={{width: 25, height: 25, alignSelf: 'flex-end', marginBottom: 5}}/>
                       <Text style={(index === this.state.selected)?styles.textsmallrightselected:styles.textsmallright}>
                         Created:
                       </Text>
                       <Text style={(index === this.state.selected)?styles.textsmallrightselected:styles.textsmallright}>
-                        {this.uppercase(item.created.slice(0,10))}
+                        {item.created.slice(0,10)}
                       </Text>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={e => {
-                        this.updateSelect(index);
-                      }}
-                      style={(index === this.state.selected)?styles.appButtonContainerSelected:styles.appButtonContainer}
-                    >
-                      <Text style={styles.appButtonText}>SHOW +</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity activeOpacity={0.8}
+                        onPress={e => {
+                          this.updateSelect(index);
+                        }}
+                        style={(index === this.state.selected)?styles.appButtonContainerSelected:styles.appButtonContainer}>
+                        <Text style={styles.appButtonText}>Episodes</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
               </View>
-            </View>
-            </View>
             </TouchableOpacity>
           ))}
-
         </View>
         <TouchableOpacity
           onPress={e => {
             this.loadMore();
           }}
-          style={styles.buttonMoreCharacteres}
-          ><Text style={styles.textButtonMoreCharacteres}>Load more characters</Text>
+          style={styles.buttonMoreCharacteres}>
+            <Text style={styles.textButtonMoreCharacteres}>Load more characters</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -266,9 +230,4 @@ const styles=StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase"
   },
-  bgred: {
-    backgroundColor: 'red',
-  }
 })
-
-export default CharactersCards;
